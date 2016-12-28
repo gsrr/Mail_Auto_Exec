@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from collections import defaultdict
 from locale import getlocale
+from locale import getdefaultlocale
 from logging import getLogger
 
 from cached_property import threaded_cached_property
@@ -41,6 +42,7 @@ class Account(object):
         self.primary_smtp_address = primary_smtp_address
         self.fullname = fullname
         self.locale = locale or getlocale()[0]
+        self.locale = getdefaultlocale()[0]
         assert isinstance(self.locale, string_types)
         # Assume delegate access if individual credentials are provided. Else, assume service user with impersonation
         self.access_type = access_type or (DELEGATE if credentials else IMPERSONATION)
