@@ -4,8 +4,22 @@ import datetime
 import re
 import traceback
 import platform
+import os
+
 
 TEXT_FORMAT = "utf-8"
+
+def loadModules(module_path):
+    files = os.listdir(module_path)
+    modules = {}
+    for file in files:
+        if file.endswith(".py") and file != "__init__.py":
+            name = file.split(".")[0]
+            import_module = 'mail_events.{}'.format(name)
+            print import_module
+            modules[name] = __import__(import_module, globals(), locals(), ['dummy'])
+    print modules
+    return modules
 
 class MailAuto:
     def __init__(self, domain, user, password, mail_server):
@@ -16,6 +30,7 @@ class MailAuto:
         self.tz = EWSTimeZone.timezone('UTC')
         self.account = None
         self.history = []
+        self.modules = loadModules("mail_events")
         
     def get_config(self):
         print "domain:", self.domain
@@ -49,11 +64,17 @@ class MailAuto:
             subject = item.subject.encode(TEXT_FORMAT)
             #print subject
             self.history.append(subject)
+            for key in self.modules.keys():
+                m = self.modules[key]
+                if m.check(subject, TEXT_FORMAT) == True:
+                    m.do(item.body.encode(TEXT_FORMAT))
+            '''
             if "RD 個人加班預先申請單".decode("utf-8").encode(TEXT_FORMAT) in subject:
                 print subject
                 body = item.body.encode(TEXT_FORMAT)
                 search_obj = re.search(r'http(.*eflow.infortrend.com.*)todo', body)
                 print search_obj.group(0).replace("amp;", "")
+            '''
             
 
 def pre_main(func):
@@ -61,6 +82,7 @@ def pre_main(func):
         global TEXT_FORMAT
         if platform.system() == 'Windows':
             TEXT_FORMAT = "big5"
+
         func()
     return wrap_func
     
