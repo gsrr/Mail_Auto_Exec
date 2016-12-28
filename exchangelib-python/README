@@ -1,9 +1,15 @@
 [Reference]
 https://pypi.python.org/pypi/exchangelib/1.7.3
 http://stackoverflow.com/questions/288546/connect-to-exchange-mailbox-with-python
+selenium documentation, http://selenium-python.readthedocs.io/locating-elements.html
+
 
 [Requirement]
 http://stackoverflow.com/questions/29099404/ssl-insecureplatform-error-when-using-requests-package
+https://chromedriver.storage.googleapis.com/index.html?path=2.27/
+pip install lxml
+pip install exchangelib
+pip install selenium
 
 [windows]
 lxml , http://www.lfd.uci.edu/~gohlke/pythonlibs/#lxml
